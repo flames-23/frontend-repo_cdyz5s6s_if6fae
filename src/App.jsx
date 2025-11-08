@@ -1,28 +1,33 @@
-import { useState } from 'react'
+import { useEffect } from 'react';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import MainSections from './components/MainSections';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  // Ensure smooth scroll behavior on older browsers
+  useEffect(() => {
+    if ('scrollBehavior' in document.documentElement.style) return;
+    const onClick = (e) => {
+      const target = e.target.closest('a[href^="#"]');
+      if (!target) return;
+      const id = target.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if (el) {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#070a12] text-white selection:bg-cyan-500/40 selection:text-white">
+      <Navbar />
+      <main className="relative">
+        <Hero />
+        <MainSections />
+      </main>
     </div>
-  )
+  );
 }
-
-export default App
